@@ -1,37 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+// 
 
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(),tailwindcss()],
+  plugins: [react()],
+  base: '/', // Correct for Vercel
   server: {
-         port: 5174, // Fixed port
-         proxy: {
-           '/api': {
-             target: 'http://localhost:8080',
-             changeOrigin: true,
-             rewrite: (path) => path.replace(/^\/api/, ''),
-             secure: false,
-           },
-           '/auth': {
-             target: 'http://localhost:8080',
-             changeOrigin: true,
-             secure: false,
-             ws: true,
-             configure: (proxy, _options) => {
-               proxy.on('proxyRes', (proxyRes, req, res) => {
-                 const cookies = proxyRes.headers['set-cookie'];
-                 if (cookies) {
-                   res.setHeader('set-cookie', cookies);
-                 }
-               });
-             }
-           },
-         },
-       },
-  build: {
-    outDir: '../frontend/dist'
-  }
-})
+    proxy: {
+      '/auth': 'http://localhost:8080',
+      '/calories': 'http://localhost:8080',
+    },
+  },
+});
