@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { MdDelete } from "react-icons/md";
+import { FadeLoader } from 'react-spinners'; // Import FadeLoader
 
-
-const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com'
+const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com';
 console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
 
 const Dashboard = ({ token, onLogout }) => {
@@ -104,7 +104,17 @@ const Dashboard = ({ token, onLogout }) => {
   if (loading) {
     return (
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center">
-        <div className="text-center text-gray-900 text-lg">Loading...</div>
+        <FadeLoader
+          color="#2563eb" // Blue to match Tailwind's bg-blue-600
+          height={15}
+          width={5}
+          radius={2}
+          margin={2}
+          loading={loading}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+          className="text-gray-900"
+        />
       </div>
     );
   }
@@ -183,13 +193,10 @@ const Dashboard = ({ token, onLogout }) => {
                         <td className="px-6 py-4 text-sm text-gray-900">{entry.meal}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{entry.calories} cal</td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          
-                          <MdDelete 
-                          onClick={() => deleteEntry(entry.id)}
+                          <MdDelete
+                            onClick={() => deleteEntry(entry.id)}
                             className="text-3xl text-red-700 cursor-pointer"
                           />
-
-
                         </td>
                       </tr>
                     ))}
