@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 
@@ -12,10 +13,9 @@ function App() {
       console.log('Received token from URL:', urlToken);
       localStorage.setItem('jwt', urlToken);
       setToken(urlToken);
-      // Clean URL without reloading
-      window.history.replaceState({}, document.title, window.location.pathname);
+      window.history.replaceState({}, document.title, '/');
     }
-  }, [token]); // Add token dependency to re-check on changes
+  }, []); // Remove token dependency to run only on mount
 
   const handleLogin = (newToken) => {
     localStorage.setItem('jwt', newToken);
@@ -27,13 +27,17 @@ function App() {
     setToken('');
   };
 
-  if (token) {
-    console.log('Rendering Dashboard with token:', token.substring(0, 20) + '...');
-    return <Dashboard token={token} onLogout={handleLogout} />;
-  } else {
-    console.log('Rendering Login');
-    return <Login onLogin={handleLogin} />;
-  }
+  console.log('App VITE_API_URL:', process.env.VITE_API_URL); // Debug
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login onLogin={handleLogin} />} />
+        <Route path="/dashboard" element={<Dashboard token={token} onLogout={handleLogout} />} />
+        <Route path="/auth/google/callback" element={<Login onLogin={handleLogin} />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

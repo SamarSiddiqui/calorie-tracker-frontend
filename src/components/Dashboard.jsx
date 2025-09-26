@@ -3,7 +3,8 @@ import { format } from 'date-fns';
 import { MdDelete } from "react-icons/md";
 
 
-const API_URL = process.env.VITE_API_URL
+const API_URL = process.env.VITE_API_URL || 'http://localhost:8080'
+console.log('VITE_API_URL:', process.env.VITE_API_URL); // Debug
 
 const Dashboard = ({ token, onLogout }) => {
   const [entries, setEntries] = useState([]);
