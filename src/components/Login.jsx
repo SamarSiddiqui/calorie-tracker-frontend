@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const API_URL = process.env.VITE_API_URL
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -24,7 +24,7 @@ const Login = ({ onLogin }) => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8080/auth/google/login';
+    window.location.href = `${API_URL}/auth/google/login`;
   };
 
   return (
