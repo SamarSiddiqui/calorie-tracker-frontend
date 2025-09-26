@@ -1,16 +1,23 @@
-// 
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [react(),tailwindcss()],
-  base: '/', // Correct for Vercel
+  plugins: [react(), tailwindcss()],
+  base: '/',
   server: {
     proxy: {
-      '/auth': 'http://localhost:8080',
-      '/calories': 'http://localhost:8080',
+      '/auth': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/calories': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
+  envPrefix: 'VITE_',
 });

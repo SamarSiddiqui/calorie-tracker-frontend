@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+  const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com'
 
   console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
   const handleEmailLogin = async (e) => {
