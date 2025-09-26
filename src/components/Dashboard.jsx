@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { MdDelete } from "react-icons/md";
 
+
+const API_URL = process.env.VITE_API_URL
+
 const Dashboard = ({ token, onLogout }) => {
   const [entries, setEntries] = useState([]);
   const [date, setDate] = useState('');
@@ -20,7 +23,7 @@ const Dashboard = ({ token, onLogout }) => {
   const loadEntries = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/calories/view', {
+      const response = await fetch(`${API_URL}/calories/view`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const data = await response.json();
@@ -43,7 +46,7 @@ const Dashboard = ({ token, onLogout }) => {
   const addEntry = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/calories/add', {
+      const response = await fetch(`${API_URL}/calories/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +78,7 @@ const Dashboard = ({ token, onLogout }) => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/calories/delete/${id}`, {
+      const response = await fetch(`${API_URL}/calories/delete/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
