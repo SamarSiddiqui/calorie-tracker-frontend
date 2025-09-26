@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { MdDelete } from "react-icons/md";
-import { FadeLoader } from 'react-spinners'; // Import FadeLoader
+import { DotLoader, FadeLoader } from 'react-spinners'; // Import FadeLoader
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com';
 console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
@@ -104,7 +104,7 @@ const Dashboard = ({ token, onLogout }) => {
   if (loading) {
     return (
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center">
-        <FadeLoader
+        <DotLoader
           color="#2563eb" // Blue to match Tailwind's bg-blue-600
           height={15}
           width={5}
