@@ -22,8 +22,7 @@ function App() {
       navigate('/dashboard', { replace: true });
     } else if (location.pathname === '/auth/google/callback') {
       console.log('No token in /auth/google/callback, query:', location.search);
-      // Optionally redirect to / or show error
-      navigate('/', { replace: true });
+      navigate('/', { replace: true, state: { error: 'Google login failed. Please try again.' } });
     }
   }, [location, navigate]);
 
@@ -41,9 +40,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Login onLogin={handleLogin} />} />
+      <Route path="/" element={<Login onLogin={handleLogin} error={location.state?.error} />} />
       <Route path="/dashboard" element={<Dashboard token={token} onLogout={handleLogout} />} />
-      <Route path="/auth/google/callback" element={<Login onLogin={handleLogin} />} />
+      <Route path="/auth/google/callback" element={<Login onLogin={handleLogin} error={location.state?.error} />} />
       <Route path="*" element={<div>404: Page Not Found</div>} />
     </Routes>
   );
