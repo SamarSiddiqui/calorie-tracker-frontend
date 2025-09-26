@@ -24,7 +24,10 @@ const Login = ({ onLogin }) => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${API_URL}/auth/google/login`;
+    const url = `${API_URL}/auth/google/login`;
+    console.log(url);
+    
+    window.location.href = url
   };
 
   return (
