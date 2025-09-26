@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('jwt') || '');
+
+  console.log('App VITE_API_URL:', import.meta.env.VITE_API_URL);
+  console.log('App loaded, current path:', window.location.pathname);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -15,7 +18,8 @@ function App() {
       setToken(urlToken);
       window.history.replaceState({}, document.title, '/');
     }
-  }, []); // Remove token dependency to run only on mount
+    console.log('useEffect ran, query params:', window.location.search);
+  }, []);
 
   const handleLogin = (newToken) => {
     localStorage.setItem('jwt', newToken);
@@ -27,14 +31,16 @@ function App() {
     setToken('');
   };
 
-  console.log('App VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login onLogin={handleLogin} />} />
         <Route path="/dashboard" element={<Dashboard token={token} onLogout={handleLogout} />} />
-        <Route path="/auth/google/callback" element={<Login onLogin={handleLogin} />} />
+        <Route
+          path="/auth/google/callback"
+          element={<Login onLogin={handleLogin} />}
+        />
+        <Route path="*" element={<div>404: Page Not Found</div>} />
       </Routes>
     </BrowserRouter>
   );
