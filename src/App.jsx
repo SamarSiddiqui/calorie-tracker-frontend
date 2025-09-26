@@ -27,7 +27,7 @@ function App() {
     setToken('');
   };
 
-  console.log('App VITE_API_URL:', process.env.VITE_API_URL); // Debug
+  console.log('App VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
 
   return (
     <BrowserRouter>
