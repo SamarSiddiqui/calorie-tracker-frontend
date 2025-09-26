@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 const Login = ({ onLogin, error }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isSignup, setIsSignup] = useState(false); // Toggle state
   const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com';
 
   console.log('Login VITE_API_URL:', import.meta.env.VITE_API_URL);
@@ -30,6 +32,33 @@ const Login = ({ onLogin, error }) => {
     }
   };
 
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      alert('Name is required');
+      return;
+    }
+    try {
+      const url = `${API_URL}/register`;
+      console.log('Fetching signup:', url);
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      });
+      const data = await response.json();
+      console.log('Signup response:', data, 'Status:', response.status);
+      if (response.ok) {
+        onLogin(data.token); // Log in after successful signup
+      } else {
+        alert(data.error || 'Signup failed');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      alert('Signup error');
+    }
+  };
+
   const handleGoogleLogin = () => {
     const url = `${API_URL}/auth/google/login`;
     console.log('Initiating Google login with:', url);
@@ -39,9 +68,31 @@ const Login = ({ onLogin, error }) => {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-        <h1 className="text-3xl font-bold text-center text-gray-900">Login</h1>
+        <h1 className="text-3xl font-bold text-center text-gray-900">
+          {isSignup ? 'Sign Up' : 'Login'}
+        </h1>
         {error && <p className="text-red-500 text-center">{error}</p>}
-        <form onSubmit={handleEmailLogin} className="space-y-6">
+        <div className="flex justify-end mb-4">
+          <button
+            type="button"
+            onClick={() => setIsSignup(!isSignup)}
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+          >
+            {isSignup ? 'Already have an account? Login' : 'New to login? Sign up'}
+          </button>
+        </div>
+        <form onSubmit={isSignup ? handleSignup : handleEmailLogin} className="space-y-6">
+          {isSignup && (
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Full Name"
+              required
+              autoComplete="name"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          )}
           <input
             type="email"
             value={email}
@@ -57,14 +108,14 @@ const Login = ({ onLogin, error }) => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             required
-            autoComplete="current-password"
+            autoComplete={isSignup ? "new-password" : "current-password"}
             className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
             className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Login
+            {isSignup ? 'Sign Up' : 'Login'}
           </button>
         </form>
         <button
