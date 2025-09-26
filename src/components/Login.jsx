@@ -1,41 +1,46 @@
 import React, { useState } from 'react';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, error }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com'
+  const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com';
 
-  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
+  console.log('Login VITE_API_URL:', import.meta.env.VITE_API_URL);
+
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const url = `${API_URL}/login`;
+      console.log('Fetching email login:', url);
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
+      console.log('Email login response:', data, 'Status:', response.status);
       if (response.ok) {
         onLogin(data.token);
       } else {
         alert(data.error || 'Login failed');
       }
     } catch (err) {
+      console.error('Email login error:', err);
       alert('Login error');
     }
   };
 
   const handleGoogleLogin = () => {
     const url = `${API_URL}/auth/google/login`;
-    console.log(url);
-    
-    window.location.href = url
+    console.log('Initiating Google login with:', url);
+    window.location.href = url;
   };
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <h1 className="text-3xl font-bold text-center text-gray-900">Login</h1>
+        {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleEmailLogin} className="space-y-6">
           <input
             type="email"
