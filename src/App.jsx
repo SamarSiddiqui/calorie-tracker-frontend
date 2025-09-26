@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('jwt') || '');
