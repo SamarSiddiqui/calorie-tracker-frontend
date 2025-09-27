@@ -4,7 +4,6 @@ import { MdDelete, MdEdit } from "react-icons/md";
 
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com'
-console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
 
 const Dashboard = ({ token, onLogout }) => {
   const [entries, setEntries] = useState([]);
@@ -15,7 +14,6 @@ const Dashboard = ({ token, onLogout }) => {
   const [editingEntryId, setEditingEntryId] = useState(null);
 
   useEffect(() => {
-    console.log('Dashboard mounted with token:', token.substring(0, 20) + '...');
     loadEntries();
     return () => {
       console.log('Dashboard unmounting');
@@ -29,11 +27,9 @@ const Dashboard = ({ token, onLogout }) => {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const data = await response.json();
-      console.log('View entries response:', data, 'Status:', response.status);
       if (response.ok) {
         setEntries(data);
       } else {
-        console.error('View entries error:', data.error || 'Unknown error');
         if (data.error === 'Invalid token') {
           onLogout();
         }
@@ -57,7 +53,6 @@ const Dashboard = ({ token, onLogout }) => {
         body: JSON.stringify({ date, meal, calories: parseInt(calories) }),
       });
       const data = await response.json();
-      console.log('Add entry response:', data, 'Status:', response.status);
       if (response.ok) {
         loadEntries();
         setDate('');
@@ -87,7 +82,6 @@ const Dashboard = ({ token, onLogout }) => {
         body: JSON.stringify({ date, meal, calories: parseInt(calories) }),
       });
       const data = await response.json();
-      console.log('Update entry response:', data, 'Status:', response.status);
       if (response.ok) {
         loadEntries();
         setDate('');
@@ -118,7 +112,6 @@ const Dashboard = ({ token, onLogout }) => {
         },
       });
       const data = await response.json();
-      console.log('Delete entry response:', data, 'Status:', response.status);
       if (response.ok) {
         loadEntries();
       } else {
@@ -160,12 +153,23 @@ const Dashboard = ({ token, onLogout }) => {
       {/* Header with Logout Button */}
       <header className="w-full bg-blue-600 text-white p-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Calorie Tracker</h1>
-        <button
-          onClick={onLogout}
-          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-        >
-          Logout
-        </button>
+
+        <div className='gap-2 flex'>
+        <a
+            href='https://github.com/SamarSiddiqui/calorie-tracker-backend'
+            target='_blank'
+            className="px-4 cursor-pointer py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-700"
+          >
+            Github Repo
+          </a>
+          <button
+            onClick={onLogout}
+            className="px-4 cursor-pointer py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Logout
+          </button>
+          
+        </div>
       </header>
 
       {/* Main Content */}
@@ -201,7 +205,7 @@ const Dashboard = ({ token, onLogout }) => {
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 cursor-pointer py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 {editingEntryId ? 'Update Meal' : 'Add Meal'}
               </button>
@@ -209,7 +213,7 @@ const Dashboard = ({ token, onLogout }) => {
                 <button
                   type="button"
                   onClick={handleCancelEdit}
-                  className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  className="w-full px-4 cursor-pointer py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
                   Cancel
                 </button>
@@ -242,7 +246,7 @@ const Dashboard = ({ token, onLogout }) => {
                         <td className="px-6 py-4 text-sm text-gray-900 flex space-x-2">
                           <MdEdit
                             onClick={() => handleEdit(entry)}
-                            className="text-3xl text-blue-700 cursor-pointer hover:text-blue-800"
+                            className="text-3xl text-blue-700 cursor-pointer"
                           />
                           
                           <MdDelete 

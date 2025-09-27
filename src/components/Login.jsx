@@ -7,20 +7,17 @@ const Login = ({ onLogin, error }) => {
   const [isSignup, setIsSignup] = useState(false); // Toggle state
   const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com';
 
-  console.log('Login VITE_API_URL:', import.meta.env.VITE_API_URL);
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     try {
       const url = `${API_URL}/login`;
-      console.log('Fetching email login:', url);
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      console.log('Email login response:', data, 'Status:', response.status);
       if (response.ok) {
         onLogin(data.token);
       } else {
@@ -40,14 +37,12 @@ const Login = ({ onLogin, error }) => {
     }
     try {
       const url = `${API_URL}/register`;
-      console.log('Fetching signup:', url);
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
       });
       const data = await response.json();
-      console.log('Signup response:', data, 'Status:', response.status);
       if (response.ok) {
         onLogin(data.token); // Log in after successful signup
       } else {
@@ -61,7 +56,6 @@ const Login = ({ onLogin, error }) => {
 
   const handleGoogleLogin = () => {
     const url = `${API_URL}/auth/google/login`;
-    console.log('Initiating Google login with:', url);
     window.location.href = url;
   };
 
@@ -76,7 +70,7 @@ const Login = ({ onLogin, error }) => {
           <button
             type="button"
             onClick={() => setIsSignup(!isSignup)}
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            className="text-blue-600 cursor-pointer hover:text-blue-800 text-sm font-medium"
           >
             {isSignup ? 'Already have an account? Login' : 'New to login? Sign up'}
           </button>
@@ -113,14 +107,14 @@ const Login = ({ onLogin, error }) => {
           />
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {isSignup ? 'Sign Up' : 'Login'}
           </button>
         </form>
         <button
           onClick={handleGoogleLogin}
-          className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          className="w-full px-4 py-2 cursor-pointer bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
         >
           Login with Google
         </button>
