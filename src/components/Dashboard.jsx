@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { MdDelete, MdEdit } from 'react-icons/md';
-import { FadeLoader } from 'react-spinners';
+import { MdDelete } from "react-icons/md";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com';
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://calorie-tracker-backend-6nfn.onrender.com'
 console.log('VITE_API_URL:', import.meta.env.VITE_API_URL); // Debug
 
 const Dashboard = ({ token, onLogout }) => {
@@ -12,7 +12,6 @@ const Dashboard = ({ token, onLogout }) => {
   const [meal, setMeal] = useState('');
   const [calories, setCalories] = useState('');
   const [loading, setLoading] = useState(true);
-  const [editingEntryId, setEditingEntryId] = useState(null); // Track entry being edited
 
   useEffect(() => {
     console.log('Dashboard mounted with token:', token.substring(0, 20) + '...');
@@ -75,37 +74,6 @@ const Dashboard = ({ token, onLogout }) => {
     }
   };
 
-  const updateEntry = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(`${API_URL}/calories/update/${editingEntryId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ date, meal, calories: parseInt(calories) }),
-      });
-      const data = await response.json();
-      console.log('Update entry response:', data, 'Status:', response.status);
-      if (response.ok) {
-        loadEntries();
-        setDate('');
-        setMeal('');
-        setCalories('');
-        setEditingEntryId(null); // Exit edit mode
-      } else {
-        alert(data.error || 'Update error');
-        if (data.error === 'Invalid token') {
-          onLogout();
-        }
-      }
-    } catch (err) {
-      console.error('Update fetch error:', err);
-      alert('Update error');
-    }
-  };
-
   const deleteEntry = async (id) => {
     if (!window.confirm('Are you sure you want to delete this entry?')) {
       return;
@@ -133,34 +101,10 @@ const Dashboard = ({ token, onLogout }) => {
     }
   };
 
-  const handleEdit = (entry) => {
-    setDate(entry.date);
-    setMeal(entry.meal);
-    setCalories(entry.calories.toString());
-    setEditingEntryId(entry.id);
-  };
-
-  const handleCancelEdit = () => {
-    setDate('');
-    setMeal('');
-    setCalories('');
-    setEditingEntryId(null);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center">
-        <FadeLoader
-          color="#2563eb"
-          height={15}
-          width={5}
-          radius={2}
-          margin={2}
-          loading={loading}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-          className="text-gray-900"
-        />
+        <div className="text-center text-gray-900 text-lg">Loading...</div>
       </div>
     );
   }
@@ -181,8 +125,8 @@ const Dashboard = ({ token, onLogout }) => {
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-4xl space-y-8">
-          {/* Add/Update Entry Form */}
-          <form onSubmit={editingEntryId ? updateEntry : addEntry} className="space-y-4">
+          {/* Add Entry Form */}
+          <form onSubmit={addEntry} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <input
                 type="date"
@@ -208,23 +152,12 @@ const Dashboard = ({ token, onLogout }) => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {editingEntryId ? 'Update Meal' : 'Add Meal'}
-              </button>
-              {editingEntryId && (
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  className="w-full px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  Cancel
-                </button>
-              )}
-            </div>
+            <button
+              type="submit"
+              className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              Add Meal
+            </button>
           </form>
 
           {/* Entries Table */}
@@ -249,15 +182,14 @@ const Dashboard = ({ token, onLogout }) => {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">{entry.meal}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{entry.calories} cal</td>
-                        <td className="px-6 py-4 text-sm text-gray-900 flex space-x-2">
-                          <MdEdit
-                            onClick={() => handleEdit(entry)}
-                            className="text-3xl text-blue-700 cursor-pointer hover:text-blue-800"
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          
+                          <MdDelete 
+                          onClick={() => deleteEntry(entry.id)}
+                            className="text-3xl text-red-700 cursor-pointer"
                           />
-                          <MdDelete
-                            onClick={() => deleteEntry(entry.id)}
-                            className="text-3xl text-red-700 cursor-pointer hover:text-red-800"
-                          />
+
+
                         </td>
                       </tr>
                     ))}
