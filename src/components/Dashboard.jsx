@@ -250,11 +250,10 @@ const Dashboard = ({ token, onLogout }) => {
                         <td className="px-6 py-4 text-sm text-gray-900">{entry.meal}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{entry.calories} cal</td>
                         <td className="px-6 py-4 text-sm text-gray-900 flex space-x-2">
-                          {/* <MdEdit
+                          <MdEdit
                             onClick={() => handleEdit(entry)}
                             className="text-3xl text-blue-700 cursor-pointer hover:text-blue-800"
-                          /> */}
-                          <h1 className='bg-red-400'>Edit</h1>
+                          />
                           <MdDelete
                             onClick={() => deleteEntry(entry.id)}
                             className="text-3xl text-red-700 cursor-pointer hover:text-red-800"
