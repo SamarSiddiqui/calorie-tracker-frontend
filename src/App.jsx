@@ -8,20 +8,14 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log('App VITE_API_URL:', import.meta.env.VITE_API_URL);
-  console.log('App loaded, current path:', location.pathname);
-  console.log('Query params:', location.search);
-
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const urlToken = urlParams.get('token');
     if (urlToken) {
-      console.log('Received token from URL:', urlToken);
       localStorage.setItem('jwt', urlToken);
       setToken(urlToken);
       navigate('/dashboard', { replace: true });
     } else if (location.pathname === '/auth/google/callback') {
-      console.log('No token in /auth/google/callback, query:', location.search);
       navigate('/', { replace: true, state: { error: 'Google login failed. Please try again.' } });
     }
   }, [location, navigate]);
